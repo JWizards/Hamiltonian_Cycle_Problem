@@ -12,9 +12,13 @@
 #include <limits>
 #include <vector>
 #include <map>
+#include <cmath>
+#include <cfenv>
+#include <tuple>
 
 namespace HCP // for Hamiltonian Cycle Problem
 {
+   
 
    using size_type = std::size_t;
    // Keywords to parse TSPLIB format
@@ -63,12 +67,6 @@ namespace HCP // for Hamiltonian Cycle Problem
   };
 
 
-   class Tour {
-      public:
-         int print_into(const std::string &filename);
-   };
-
-
 /**
    @class Instance
    @brief brief here
@@ -86,6 +84,8 @@ namespace HCP // for Hamiltonian Cycle Problem
       std::string get_name() const;
       size_type get_coords() const;
       size_type get_dimension() const;
+      int dist(size_type, size_type);
+      std::tuple<double, double> get_coords(size_type i);
 
       Instance() = default;
 
@@ -98,6 +98,10 @@ namespace HCP // for Hamiltonian Cycle Problem
       Keyword edge_weight_format = NONE; 
       std::vector<double> coords;
       std::vector<int> explicit_weights;
+
+      int euc_2d(double x, double y, double a, double b);
+      int ceil_2d(double x, double y, double a, double b);
+
    }; // class Instance
 
    //BEGIN: Inline section
@@ -113,6 +117,19 @@ namespace HCP // for Hamiltonian Cycle Problem
       return this->dimensions;
    }
 
+   inline int Instance::euc_2d(double x, double y, double a, double b){
+      std::fesetround(FE_TONEAREST);
+      double X = x - a;
+      double Y = y - b;
+      return std::nearbyint(sqrt((X*X + Y*Y)));
+   }
+
+   inline int Instance::ceil_2d(double x, double y, double a, double b){
+      std::fesetround(FE_UPWARD);
+      double X = x - a;
+      double Y = y - b;
+      return std::nearbyint(sqrt((X*X + Y*Y)));
+   }
 
 //END: Inline section
 } // namespace ED

@@ -8,6 +8,9 @@
 namespace HCP{
 
 
+    //parsing related functions
+
+
     Keyword catch_keyword(std::string a){
         Keyword keyword = NONE;
         try
@@ -106,5 +109,75 @@ namespace HCP{
         return 0;
     }
 
+    // distance related functions
+
+    std::tuple<double, double> Instance::get_coords(size_type i){
+        return {this->coords[2*i], this->coords[2*i+1]} ;
+    }
+
+
+    int Instance::dist(size_type i, size_type j){
+        i = i % this->dimensions;
+        j = j % this->dimensions;
+        
+        auto[a, b] = this->get_coords(i);
+        auto[x, y] = this->get_coords(j);
+
+        auto d = this->dimensions;
+        auto at = d*i + j;
+
+        switch(this->edge_weight_type){
+            case EUC_2D:
+                return euc_2d(a, b, x, y);
+                break;
+            case CEIL_2D:
+                return ceil_2d(a, b, x, y);
+                break;
+            case EXPLICIT:
+                
+                switch(this->edge_weight_format){
+                    case FULL_MATRIX:
+                        at = d*i + j;
+                        return this->explicit_weights[at];
+                        break;
+                    case LOWER_DIAG_ROW:
+                        if (j > i){
+                            auto temp = j;
+                            j = i;
+                            i = temp;
+                        }
+                        at = d*i + j;
+                        return this->explicit_weights[at];
+                        break;
+                    case UPPER_DIAG_ROW:
+                        if (i > j){
+                            auto temp = j;
+                            j = i;
+                            i = temp;
+                        }
+                        at = d*i + j;
+                        return this->explicit_weights[at];
+                        break;
+                    case UPPER_ROW:
+                        if (i == j)
+                            return 0;
+                        if (j < i){
+                            auto temp = j;
+                            j = i;
+                            i = temp;
+                        }
+                        at = d*i + j;
+                        return this->explicit_weights[at];
+                        break;
+                    
+                    default:
+                    break;
+                }
+                break;
+            default:
+                break;   
+        }
+        return std::numeric_limits<int>::max();
+    }
 } //namespace HCP
 
