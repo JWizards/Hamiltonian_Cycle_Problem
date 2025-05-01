@@ -59,38 +59,38 @@ namespace HCP{
         
         // some local variables to support parsing of the file
         std::stringstream line_stream;
-        std::string word;
+        std::string key_string, value_string;
         std::string line;
 
         while(getline(file_stream, line)){
             line_stream.clear();
             line_stream.str(line); //stream the line
-            line_stream >> word;
-            std::cout << word << "\n";
+            line_stream >> key_string;
 
-            Keyword keyword = catch_keyword(word);
+            //handle differently formatted problem files.
+            if(key_string.back() == ':'){
+                line_stream >> value_string;
+                key_string.pop_back();
+            } else {
+                interpret_line(line_stream, value_string);
+            }
 
+            Keyword keyword = catch_keyword(key_string);
             switch(keyword){
                 case NAME:
-                    interpret_line(line_stream, word);
-                    instance.name = word;
+                    instance.name = value_string;
                 break;
                 case TYPE:
-                    interpret_line(line_stream, word);
-                    instance.type = m.at(word);
+                    instance.type = catch_keyword(value_string);
                     break;
                 case DIMENSION:
-                    interpret_line(line_stream, word);
-                    std::cout << "dim is " << word << "\n";
-                    instance.dimensions = stoi(word);
+                    instance.dimensions = stoi(value_string);
                     break;
                 case EDGE_WEIGHT_TYPE:
-                    interpret_line(line_stream, word);
-                    instance.edge_weight_type = m.at(word);
+                    instance.edge_weight_type = catch_keyword(value_string);
                     break;
                 case EDGE_WEIGHT_FORMAT:
-                    interpret_line(line_stream, word);
-                    instance.edge_weight_format = m.at(word);
+                    instance.edge_weight_format = catch_keyword(value_string);
                     break;
                 case EDGE_WEIGHT_SECTION:
                     parse_data(file_stream, instance);
