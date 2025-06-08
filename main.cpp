@@ -23,8 +23,7 @@ int main(int argc, char** argv)
       return EXIT_FAILURE;
    }
    
-   HCP::Instance instance;
-   HCP::Instance::read_TSPLIB(argv[1], instance);
+   HCP::Instance instance(argv[1]); //read TSPLIB and store as instance
 
    std::cout << "instance has name " << instance.get_name() << "\n";
    std::cout << "number of coords is " << instance.get_coords() << "\n";

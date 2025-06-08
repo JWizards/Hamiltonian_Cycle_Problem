@@ -49,7 +49,7 @@ namespace HCP{
 
 
 //read TSPLIB function
-    int Instance::read_TSPLIB(const std::string & filename, Instance &instance){
+    int Instance::read_TSPLIB(const std::string & filename){
         std::ifstream file_stream(filename);
         if (!file_stream.is_open())
            throw std::runtime_error("Could not open input file.");
@@ -75,29 +75,25 @@ namespace HCP{
             Keyword keyword = catch_keyword(key_string);
             switch(keyword){
                 case NAME:
-                    instance.name = value_string;
+                    name = value_string;
                 break;
                 case TYPE:
-                    instance.type = catch_keyword(value_string);
+                    type = catch_keyword(value_string);
                     break;
                 case DIMENSION:
-                    instance.dimensions = stoi(value_string);
+                    dimensions = stoi(value_string);
                     break;
                 case EDGE_WEIGHT_TYPE:
-                    instance.edge_weight_type = catch_keyword(value_string);
+                    edge_weight_type = catch_keyword(value_string);
                     break;
                 case EDGE_WEIGHT_FORMAT:
-                    instance.edge_weight_format = catch_keyword(value_string);
+                    edge_weight_format = catch_keyword(value_string);
                     break;
                 case EDGE_WEIGHT_SECTION:
-                    // NOTE: You should pass a parameter to parse_data to tell it whether it should
-                    // parse the edge weights or the node coordinates (or even better, separate that functionality
-                    // into 2 different functions). Right now, the code will not work if the edge weight type is "EXPLICIT"
-                    // and node coordinates are given (which is allowed by the TSPLIB specification).
-                    parse_data(file_stream, instance);
+                    parse_data(file_stream, *this);
                     break;
                 case NODE_COORD_SECTION:
-                    parse_data(file_stream, instance);
+                    parse_data(file_stream, *this);
                     break;
                 case EOFF:
                 case COMMENT: //do nothing

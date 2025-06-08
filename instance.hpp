@@ -88,15 +88,16 @@ namespace HCP // for Hamiltonian Cycle Problem
       // NOTE: Same as above, remove "static" and Instance reference
 
 
-      static int read_TSPLIB(const std::string & filename, Instance &);
-      static int parse_data(std::ifstream &ifs, Instance &instance);
+      int read_TSPLIB(const std::string &);
+      static int parse_data(std::ifstream &, Instance &);
       std::string get_name() const;
       size_type get_coords() const;
       size_type get_dimension() const;
-      int dist(size_type, size_type);
+      int dist(size_type, size_type); //cost functions are specified to return integers only
       std::pair<double, double> get_coords(size_type i);
 
       Instance() = default;
+      Instance(const std::string & filename) {read_TSPLIB(filename);}
 
       friend std::ostream & operator<<(std::ostream & str, Instance const & Instance);
    private:
