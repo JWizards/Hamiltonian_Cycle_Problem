@@ -9,13 +9,10 @@ namespace HCP{
 
 
     //parsing related functions
-
-
     Keyword catch_keyword(std::string a){
         Keyword keyword = NONE;
-        try
-        {
-            keyword = m.at(a);
+        try{
+            keyword = string_to_Keyword.at(a);
         }
         catch(const std::exception& e){ }
         return keyword;
@@ -93,6 +90,10 @@ namespace HCP{
                     instance.edge_weight_format = catch_keyword(value_string);
                     break;
                 case EDGE_WEIGHT_SECTION:
+                    // NOTE: You should pass a parameter to parse_data to tell it whether it should
+                    // parse the edge weights or the node coordinates (or even better, separate that functionality
+                    // into 2 different functions). Right now, the code will not work if the edge weight type is "EXPLICIT"
+                    // and node coordinates are given (which is allowed by the TSPLIB specification).
                     parse_data(file_stream, instance);
                     break;
                 case NODE_COORD_SECTION:
@@ -111,12 +112,21 @@ namespace HCP{
 
     // distance related functions
 
-    std::tuple<double, double> Instance::get_coords(size_type i){
+    std::pair<double, double> Instance::get_coords(size_type i){
         return {this->coords[2*i], this->coords[2*i+1]} ;
     }
 
 
     int Instance::dist(size_type i, size_type j){
+        // NOTE: This function will usually be called many times, so it should
+        // be as fast as possible. Distinguishing between all the different edge
+        // weight functions here (and computing the square root in the case of
+        // Euclidean edge weights) creates a lot of overhead.
+        // Usually, the best approach is to just create a full distance matrix
+        // when reading in the instance (regardless of the edge weight format)
+        // and then just return those values here (this approach only fails
+        // when you're trying to solve extremely large instances for which the
+        // distance matrix does not fit into RAM)
         i = i % this->dimensions;
         j = j % this->dimensions;
         
@@ -124,7 +134,7 @@ namespace HCP{
         auto[x, y] = this->get_coords(j);
 
         auto d = this->dimensions;
-        auto at = d*i + j;
+        auto at = d*i + j; //array index default calculation
 
         switch(this->edge_weight_type){
             case EUC_2D:

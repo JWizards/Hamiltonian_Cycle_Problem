@@ -14,7 +14,6 @@
 #include <map>
 #include <cmath>
 #include <cfenv>
-#include <tuple>
 
 namespace HCP // for Hamiltonian Cycle Problem
 {
@@ -45,7 +44,7 @@ namespace HCP // for Hamiltonian Cycle Problem
    };
 
    //Keywords
-   const std::map<std::string, Keyword> m = {
+   const std::map<std::string, Keyword> string_to_Keyword = {
       {"NAME",                 NAME},
       {"TYPE",                 TYPE},
       {"TSP",                  TSP},
@@ -79,13 +78,23 @@ namespace HCP // for Hamiltonian Cycle Problem
       /**
          @brief Creates the Instance from the given file in TSPLIB format.
       **/
+
+      // NOTE: The signature should be "int read_TSPLIB(const std::string& filename)".
+      // Making the function static and then explicitly passing a reference to an Instance
+      // is redundant. Even better would be to delete the default constructor below and create
+      // a constructor "Instance(const std::string& filename)" since default-constructing an instance
+      // not really useful.
+      // static int read_TSPLIB(const std::string & filename, Instance &);
+      // NOTE: Same as above, remove "static" and Instance reference
+
+
       static int read_TSPLIB(const std::string & filename, Instance &);
       static int parse_data(std::ifstream &ifs, Instance &instance);
       std::string get_name() const;
       size_type get_coords() const;
       size_type get_dimension() const;
       int dist(size_type, size_type);
-      std::tuple<double, double> get_coords(size_type i);
+      std::pair<double, double> get_coords(size_type i);
 
       Instance() = default;
 
@@ -104,7 +113,7 @@ namespace HCP // for Hamiltonian Cycle Problem
 
    }; // class Instance
 
-   //BEGIN: Inline section
+//BEGIN: Inline section
    inline std::string Instance::get_name() const {
       return this->name;
    }

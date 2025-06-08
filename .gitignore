@@ -1,5 +1,6 @@
 local.cpp
 local
 *.tsp
+*.tour
 .vscode
 main
