@@ -79,17 +79,8 @@ namespace HCP // for Hamiltonian Cycle Problem
          @brief Creates the Instance from the given file in TSPLIB format.
       **/
 
-      // NOTE: The signature should be "int read_TSPLIB(const std::string& filename)".
-      // Making the function static and then explicitly passing a reference to an Instance
-      // is redundant. Even better would be to delete the default constructor below and create
-      // a constructor "Instance(const std::string& filename)" since default-constructing an instance
-      // not really useful.
-      // static int read_TSPLIB(const std::string & filename, Instance &);
-      // NOTE: Same as above, remove "static" and Instance reference
-
-
       int read_TSPLIB(const std::string &);
-      static int parse_data(std::ifstream &, Instance &);
+      int parse_data(std::ifstream &);
       std::string get_name() const;
       size_type get_coords() const;
       size_type get_dimension() const;

@@ -27,20 +27,20 @@ namespace HCP{
         return 1;
     }
 
-    int Instance::parse_data(std::ifstream &ifs, Instance &instance){
+    int Instance::parse_data(std::ifstream &ifs){
         std::string a, b, c;
         
-        if(instance.edge_weight_type == EXPLICIT){
+        if(edge_weight_type == EXPLICIT){
             while(ifs >> a){
                 if(catch_keyword(a) != EOF and stoi(a) != -1){ 
-                    instance.explicit_weights.push_back(stoi(a));
+                    explicit_weights.push_back(stoi(a));
                 }
             }
         } else {
             while(ifs >> a >> b >> c){
                 if(catch_keyword(a) != EOF){
-                    instance.coords.push_back(stod(b));
-                    instance.coords.push_back(stod(c));
+                    coords.push_back(stod(b));
+                    coords.push_back(stod(c));
                 }
             }
         }
@@ -90,10 +90,10 @@ namespace HCP{
                     edge_weight_format = catch_keyword(value_string);
                     break;
                 case EDGE_WEIGHT_SECTION:
-                    parse_data(file_stream, *this);
+                    this->parse_data(file_stream);
                     break;
                 case NODE_COORD_SECTION:
-                    parse_data(file_stream, *this);
+                    this->parse_data(file_stream);
                     break;
                 case EOFF:
                 case COMMENT: //do nothing
