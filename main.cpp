@@ -26,7 +26,6 @@ int main(int argc, char** argv)
    HCP::Instance instance(argv[1]); //read TSPLIB and store as instance
 
    std::cout << "instance has name " << instance.get_name() << "\n";
-   std::cout << "number of coords is " << instance.get_coords() << "\n";
    std::cout << "instance dimension is " << instance.get_dimension() << "\n";
    
    std::cout << "Default tour length: " << default_tour_length(instance) << std::endl;

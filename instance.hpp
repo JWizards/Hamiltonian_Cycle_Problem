@@ -82,7 +82,6 @@ namespace HCP // for Hamiltonian Cycle Problem
       int read_TSPLIB(const std::string &);
       int parse_data(std::ifstream &);
       std::string get_name() const;
-      size_type get_coords() const;
       size_type get_dimension() const;
       int dist(size_type, size_type); //cost functions are specified to return integers only
       std::pair<double, double> get_coords(size_type i);
@@ -108,10 +107,6 @@ namespace HCP // for Hamiltonian Cycle Problem
 //BEGIN: Inline section
    inline std::string Instance::get_name() const {
       return this->name;
-   }
-
-   inline size_type Instance::get_coords() const {
-      return this->coords.size();
    }
 
    inline size_type Instance::get_dimension() const {
