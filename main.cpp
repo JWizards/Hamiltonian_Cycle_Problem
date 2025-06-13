@@ -27,9 +27,7 @@ int main(int argc, char** argv)
 
    std::cout << "instance has name " << instance.get_name() << "\n";
    std::cout << "instance dimension is " << instance.get_dimension() << "\n";
-   
-   std::cout << "Default tour length: " << default_tour_length(instance) << std::endl;
-   auto [greedy_tour_length, greedy_tour_found] = greedy_tour(instance);
-   std::cout << "Greedy Tour length: " << greedy_tour_length << std::endl;
-   HCP::print_tour(greedy_tour_found, instance);
+
+   std::cout << "instance adjancency list is\n" << "\n";
+   instance.print_adjacency_matrix();
 }

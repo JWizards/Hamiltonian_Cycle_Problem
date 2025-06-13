@@ -25,7 +25,8 @@ namespace HCP // for Hamiltonian Cycle Problem
          NAME,                
          TYPE,                
          TSP,                 
-         ATSP,                
+         ATSP,
+         HCP,                
          COMMENT,             
          DIMENSION,           
          EDGE_WEIGHT_TYPE,    
@@ -36,9 +37,13 @@ namespace HCP // for Hamiltonian Cycle Problem
          FULL_MATRIX,         
          LOWER_DIAG_ROW,      
          UPPER_DIAG_ROW,      
-         UPPER_ROW,           
+         UPPER_ROW,
+         EDGE_DATA_FORMAT,
+         EDGE_LIST,
+         ADJ_LIST,           
          EDGE_WEIGHT_SECTION, 
-         NODE_COORD_SECTION,  
+         NODE_COORD_SECTION,
+         EDGE_DATA_SECTION,  
          EOFF, //Extra f on EOF,
          NONE // C++ special enumeration can be refered to as '{}'                    
    };
@@ -49,6 +54,7 @@ namespace HCP // for Hamiltonian Cycle Problem
       {"TYPE",                 TYPE},
       {"TSP",                  TSP},
       {"ATSP",                 ATSP},
+      {"HCP",                  HCP},
       {"COMMENT",              COMMENT},
       {"DIMENSION",            DIMENSION},
       {"EDGE_WEIGHT_TYPE",     EDGE_WEIGHT_TYPE},
@@ -60,8 +66,12 @@ namespace HCP // for Hamiltonian Cycle Problem
       {"LOWER_DIAG_ROW",       LOWER_DIAG_ROW},
       {"UPPER_DIAG_ROW",       UPPER_DIAG_ROW},
       {"UPPER_ROW",            UPPER_ROW},
+      {"EDGE_DATA_FORMAT",     EDGE_DATA_FORMAT},
+      {"EDGE_LIST",            EDGE_LIST},
+      {"ADJ_LIST",             ADJ_LIST}, 
       {"EDGE_WEIGHT_SECTION",  EDGE_WEIGHT_SECTION},
       {"NODE_COORD_SECTION",   NODE_COORD_SECTION},
+      {"EDGE_DATA_SECTION",    EDGE_DATA_SECTION},
       {"EOF",                  EOFF}
   };
 
@@ -80,7 +90,7 @@ namespace HCP // for Hamiltonian Cycle Problem
       **/
 
       int read_TSPLIB(const std::string &);
-      int parse_data(std::ifstream &);
+      int parse_data(std::ifstream &, HCP::Keyword);
       std::string get_name() const;
       size_type get_dimension() const;
       int dist(size_type, size_type); //cost functions are specified to return integers only
@@ -90,15 +100,18 @@ namespace HCP // for Hamiltonian Cycle Problem
       Instance(const std::string & filename) {read_TSPLIB(filename);}
 
       friend std::ostream & operator<<(std::ostream & str, Instance const & Instance);
-   private:
+      int print_adjacency_matrix();
+      private:
       std::string name = "";
-      HCP::Keyword type = NONE;
+      Keyword type = NONE;
       size_type dimensions = 0;
       Keyword edge_weight_type = NONE;
-      Keyword edge_weight_format = NONE; 
+      Keyword edge_weight_format = NONE;
+      Keyword edge_data_format = NONE;
       std::vector<double> coords;
       std::vector<int> explicit_weights;
-
+      std::vector<bool> adjacency_list; //vector<bool> is not a Container and stl algorithms may not work. But it is space efficient improving cache and random access.
+      
       int euc_2d(double x, double y, double a, double b);
       int ceil_2d(double x, double y, double a, double b);
 
@@ -126,6 +139,6 @@ namespace HCP // for Hamiltonian Cycle Problem
       double Y = y - b;
       return std::nearbyint(sqrt((X*X + Y*Y)));
    }
-
+   
 //END: Inline section
 } // namespace ED
