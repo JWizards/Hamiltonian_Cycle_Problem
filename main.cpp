@@ -1,5 +1,7 @@
 #include "instance.hpp"
 #include "tsp_greedy.hpp"
+#include "ordering.hpp"
+
 #include <iostream>
 
 
@@ -30,4 +32,10 @@ int main(int argc, char** argv)
 
    std::cout << "instance adjancency list is\n" << "\n";
    instance.print_adjacency_matrix();
+
+   HCP::Ordering ordering(instance);
+
+   std::cout << "\n\n\nNow we print the default ordering\n";
+   ordering.print_ordering();
+
 }

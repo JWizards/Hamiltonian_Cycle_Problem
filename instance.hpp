@@ -101,7 +101,8 @@ namespace HCP // for Hamiltonian Cycle Problem
 
       friend std::ostream & operator<<(std::ostream & str, Instance const & Instance);
       int print_adjacency_matrix();
-      private:
+
+   private:
       std::string name = "";
       Keyword type = NONE;
       size_type dimensions = 0;
